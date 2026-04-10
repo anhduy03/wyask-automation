@@ -4,7 +4,7 @@ const common = [
   '--require src/tests/**/*.ts', // Load step definitions
   '--format progress' // Load custom formatter
 ].join(' ');
-
+/test/
 module.exports = {
   default: common,
 };
