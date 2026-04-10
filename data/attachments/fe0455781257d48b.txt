@@ -1,10 +1,10 @@
 Successfully on envelopes page: https://wyask-fe-staging-new.vercel.app/workspace/envelopes
-Entered name: Test Envelope 1775846118319
+Entered name: Test Envelope 1775846391779
 Knowledge field is blank by default
 Before name entry - Continue button is disabled: true
-Created PNG test file at: /tmp/test-file-1775846118572.png
+Created PNG test file at: /tmp/test-file-1775846392065.png
 Found 1 file inputs
 File uploaded successfully to knowledge field
 Button still disabled: false
 Has disabled attribute: false
-Has name value: true (Test Envelope 1775846118319)
+Has name value: true (Test Envelope 1775846391779)
