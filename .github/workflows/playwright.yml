@@ -24,6 +24,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Generate BDD tests
+        run: npx bddgen
+
       - name: Run tests
         env:
           LOGIN_EMAIL: ${{ secrets.LOGIN_EMAIL }}
