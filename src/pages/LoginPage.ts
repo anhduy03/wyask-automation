@@ -27,9 +27,11 @@ export class LoginPage {
     await this.clickLoginLink();
     await this.emailInput.fill(email);
     await this.passwordInput.fill(pass);
-    // Click sign in and wait for page load
+    // Click sign in
     await this.signInButton.click();
-    // Wait a moment for the page to process the login
-    await this.page.waitForLoadState('networkidle', { timeout: 60000 });
+    // Wait for sign in button to disappear (indicating navigation has started)
+    await this.signInButton.waitFor({ state: 'hidden', timeout: 30000 });
+    // Wait a bit for the page to load
+    await this.page.waitForLoadState('load', { timeout: 30000 });
   }
 }
