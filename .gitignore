@@ -1,0 +1,16 @@
+
+# Playwright
+node_modules/
+/.features-gen/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+/artifacts/
+/.husky/
+/test-results/
+/allure-results/
+/.bdd-gen/
+.eslintrc.json
+.env
