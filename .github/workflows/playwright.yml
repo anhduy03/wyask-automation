@@ -131,9 +131,10 @@ jobs:
           cp -r allure-results-plus/* allure-results/ 2>/dev/null || true
 
       - name: Install Java (Required for Allure)
-        run: |
-          apt-get update
-          apt-get install -y default-jre
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Generate Allure report
         run: npx allure generate ./allure-results --clean -o ./allure-report
