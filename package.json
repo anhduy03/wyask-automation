@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:ui": "npx bddgen && npx playwright test --ui --project=chromium",
+    "test:ui": "npx bddgen && npx playwright test --ui",
+    "test:ui:fresh": "npx bddgen && npx playwright test --project=setup:pro --project=setup:plus && npx playwright test --ui",
     "allure:generate": "allure generate ./allure-results --clean -o ./allure-report",
     "allure:open": "allure open ./allure-report"
   },

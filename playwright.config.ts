@@ -1,84 +1,99 @@
 import { defineConfig, devices } from '@playwright/test';
-import { defineBddConfig } from 'playwright-bdd';
+import { defineBddConfig, test as bddTest } from 'playwright-bdd';
 import * as dotenv from 'dotenv';
-import { test } from './src/fixtures/commonHelper';
+import * as fs from 'fs';
+import * as path from 'path';
+import { LoginPage } from './src/pages/LoginPage';
+import { HomePage } from './src/pages/HomePage';
+import { getAccount, type AccountRole } from './src/helpers/accountHelper';
+import { ensureAuthDir, getStorageStatePath, storageStateExists } from './src/helpers/storageStateHelper';
+
 dotenv.config();
-
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+ensureAuthDir();
 
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * Playwright configuration for multi-plan BDD testing.
+ *
+ * Test execution strategy:
+ * - `setup` projects: log in and save storageState per role (runs once)
+ * - `pro` project: runs tests tagged @pro and @shared using PRO account
+ * - `plus` project: runs tests tagged @plus and @shared using PLUS account
+ *
+ * CLI usage:
+ *   npx playwright test --project=pro        # Pro plan tests only
+ *   npx playwright test --project=plus       # Plus plan tests only
+ *   npx playwright test                       # Both plans (includes setup)
+ *   npx playwright test --grep "@pro"        # Only @pro tagged tests
+ *   npx playwright test --grep "@plus"       # Only @plus tagged tests
+ *   npx playwright test --grep "@shared"     # Only @shared tagged tests
  */
+
+// Setup projects to generate storageState for each role
+const setupProjects = ['pro', 'plus'].map((role) => ({
+  name: `setup:${role}`,
+  testDir: './src/setup',
+  testMatch: /.*\.setup\.ts/,
+  grep: /.*/,
+  fullyParallel: false,
+  use: {
+    ...devices['Desktop Chrome'],
+    accountRole: role as AccountRole,
+  },
+}));
+
 export default defineConfig({
   timeout: 60_000,
   testDir: './.bdd-gen',
-  /* Run tests in files in parallel */
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],
-    ['allure-playwright']
+    ['allure-playwright'],
   ],
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
     baseURL: process.env.BASE_URL,
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    viewport: { width: 1440, height: 900 },
   },
 
-  /* Configure projects for major browsers */
   projects: [
+    ...setupProjects,
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'pro',
+      use: {
+        ...devices['Desktop Chrome'],
+        accountRole: 'pro',
+        storageState: getStorageStatePath('pro'),
+      },
+      grep: /@pro|@shared/,
+      grepInvert: /@plus/,
+      // Only depend on setup if storage state doesn't exist
+      dependencies: storageStateExists('pro') ? [] : ['setup:pro'],
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    {
+      name: 'plus',
+      use: {
+        ...devices['Desktop Chrome'],
+        accountRole: 'plus',
+        storageState: getStorageStatePath('plus'),
+      },
+      grep: /@plus|@shared/,
+      grepInvert: /@pro/,
+      // Only depend on setup if storage state doesn't exist
+      dependencies: storageStateExists('plus') ? [] : ['setup:plus'],
+    },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });
 
 defineBddConfig({
   features: './src/tests/**/*.feature',
-  steps: ['./src/tests/**/*.ts', './src/fixtures/commonHelper.ts'],
+  steps: [
+    './src/tests/shared/*.ts',
+    './src/tests/pro-plan/*.ts',
+    './src/tests/plus-plan/*.ts',
+    './src/fixtures/commonHelper.ts',
+  ],
   outputDir: './.bdd-gen',
 });
