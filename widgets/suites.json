@@ -1,1 +1,1 @@
-{"total":1,"items":[{"uid":"36c900977e1d8b81a2c6893cc82bfc01","name":"chromium","statistic":{"failed":0,"broken":0,"skipped":0,"passed":7,"unknown":0,"total":7}}]}
+{"total":2,"items":[{"uid":"54ae81fd96b51318cb0b8c101ce03f65","name":"pro","statistic":{"failed":0,"broken":0,"skipped":0,"passed":11,"unknown":0,"total":11}},{"uid":"584480ea8071fdab4021ccfd7b088eeb","name":"plus","statistic":{"failed":0,"broken":0,"skipped":0,"passed":6,"unknown":0,"total":6}}]}
