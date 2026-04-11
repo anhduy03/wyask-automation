@@ -1,22 +1,24 @@
 import { createBdd } from "playwright-bdd";
 import { test } from "../fixtures/commonHelper";
-import { expect } from "@playwright/test";
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { HomePage } from "../pages/HomePage";
 
 const { Given } = createBdd(test);
 
-// Background step using credentials from .env
-Given("the user is logged in to the application", async ({ loginPage, homePage, page }: { loginPage: LoginPage; homePage: HomePage; page: any }) => {
-  const email = process.env.LOGIN_EMAIL!;
-  const password = process.env.LOGIN_PASSWORD!;
+Given("the user is logged in to the application", async ({ loginPage, homePage, page }: { loginPage: LoginPage; homePage: HomePage; page: Page }) => {
+  const email = process.env.LOGIN_EMAIL;
+  const password = process.env.LOGIN_PASSWORD;
+  
+  if (!email || !password) {
+    throw new Error("Missing required environment variables: LOGIN_EMAIL and LOGIN_PASSWORD must be set");
+  }
+  
   await loginPage.login(email, password);
-  // Wait for home page elements to confirm successful login
   await homePage.brandingLogo.waitFor({ state: 'visible', timeout: 10000 });
-  // Extra wait to ensure session is established
+  
   await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {
-    console.log('Network idle timeout after login, continuing...');
+    test.info().annotations.push({ type: 'WARNING', description: 'Network idle timeout after login, continuing...' });
   });
 });
 

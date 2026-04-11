@@ -2,6 +2,7 @@ import { createBdd } from "playwright-bdd";
 import { test } from "../../fixtures/commonHelper";
 import { expect } from "@playwright/test";
 import { EnvelopesPage } from "../../pages/EnvelopesPage";
+import type { LanguageOption, ToneOption } from "../../pages/EnvelopesPage";
 
 const { Given, When, Then } = createBdd(test);
 
@@ -18,7 +19,7 @@ When("the user leaves the \"Name\" field blank", async ({ envelopesPage }: { env
 });
 
 When("the user leaves the \"Knowledge\" field blank", async () => {
-  // No-op: the Knowledge upload is expected to be empty by default for this scenario.
+  // Intentionally empty - the Knowledge upload is expected to be empty by default for this scenario.
 });
 
 When("the user uploads a mock file to the Knowledge field", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
@@ -53,42 +54,35 @@ When(
   },
 );
 
-When("the user selects a random language", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
-  await envelopesPage.selectRandomLanguage();
-});
+When(
+  "the user selects {string} from the {string} dropdown",
+  async ({ envelopesPage }: { envelopesPage: EnvelopesPage }, value: string, dropdownName: string) => {
+    const dropdown = dropdownName.trim().toLowerCase();
+    if (dropdown === "language") {
+      await envelopesPage.selectLanguage(value as LanguageOption);
+    } else if (dropdown === "tone") {
+      await envelopesPage.selectTone(value as ToneOption);
+    } else {
+      throw new Error(`Unsupported dropdown: "${dropdownName}"`);
+    }
+  },
+);
 
-When("the user selects a random tone", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
-  await envelopesPage.selectRandomTone();
-});
-
-When("the user clicks on the \"Continue\" button", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
-  await envelopesPage.clickContinue();
-});
-
-When("the user clicks enter button", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
-  await envelopesPage.submitWithEnterKey();
+When("the user submits the form", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
+  await envelopesPage.submitForm();
 });
 
 Then("a successful notification displays", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
-  await envelopesPage.dismissUnsavedChangesIfPresent(2000);
-  // Prefer a success-like message, but fall back to "any toast appeared" to reduce false negatives.
-  const successLike = envelopesPage.notificationMessages.filter({
-    hasText: /success|created|envelope/i,
+  // Wait for success toast - the app shows "Envelope created successfully"
+  const successNotification = envelopesPage.notificationMessages.filter({
+    hasText: /envelope created successfully/i,
   });
-
-  try {
-    await expect(successLike.first()).toBeVisible({ timeout: 10000 });
-  } catch {
-    // Some pages don't populate the Notifications list; accept the app's aria-live page title update as "success".
-    await expect(
-      envelopesPage.page.getByRole("alert").filter({ hasText: /Brand/i }).first(),
-    ).toBeVisible({ timeout: 10000 });
-  }
+  await expect(successNotification.first()).toBeVisible({ timeout: 15000 });
 });
 
 Then("the Brand your envelope page displays", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
-  await envelopesPage.dismissUnsavedChangesIfPresent(2000);
-  await expect(envelopesPage.brandSkipLink).toBeVisible({ timeout: 10000 });
+  // Wait for the Brand your envelope heading to be visible
+  await expect(envelopesPage.brandYourEnvelopeHeading).toBeVisible({ timeout: 10000 });
 });
 
 Then("the \"Continue\" button should be disabled", async ({ envelopesPage }: { envelopesPage: EnvelopesPage }) => {
