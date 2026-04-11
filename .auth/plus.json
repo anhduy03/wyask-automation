@@ -1,0 +1,125 @@
+{
+  "cookies": [
+    {
+      "name": "_sp_ses.b9aa",
+      "value": "*",
+      "domain": ".wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": 1775895971,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_sp_id.b9aa",
+      "value": "4b513ae7-9786-4cd8-924a-658a775ac934.1775894172.1.1775894172..f6f29d2f-cf50-4272-baff-b712882c953b..d0731d0f-88a4-4ce7-adf6-57c237af83ae.1775894171526.2",
+      "domain": ".wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": 1810454171.536782,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AMP_MKTG_491f213ae2",
+      "value": "JTdCJTdE",
+      "domain": ".wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": 1807430171,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.1.1566569809.1775894172",
+      "domain": ".wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": 1810454171.823524,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_TZTH445KWB",
+      "value": "GS2.1.s1775894171$o1$g0$t1775894174$j57$l0$h0",
+      "domain": ".wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": 1810454174.611845,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AMP_491f213ae2",
+      "value": "JTdCJTIyZGV2aWNlSWQlMjIlM0ElMjJhODFiODMxMi1hZTFmLTRkZjYtOTE3Yy00MzEzMTliMzlkMzUlMjIlMkMlMjJzZXNzaW9uSWQlMjIlM0ExNzc1ODk0MTcxNTQwJTJDJTIyb3B0T3V0JTIyJTNBZmFsc2UlMkMlMjJsYXN0RXZlbnRUaW1lJTIyJTNBMTc3NTg5NDE3NDY2MSUyQyUyMmxhc3RFdmVudElkJTIyJTNBOCUyQyUyMnBhZ2VDb3VudGVyJTIyJTNBMSUyQyUyMmNvb2tpZURvbWFpbiUyMiUzQSUyMi53eWFzay1mZS1zdGFnaW5nLW5ldy52ZXJjZWwuYXBwJTIyJTdE",
+      "domain": ".wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": 1807430174,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "access_token",
+      "value": "eyJhbGciOiJIUzI1NiIsImtpZCI6IlhhM3Z4RjcxVm9tQXA1QkoiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2dqamlmZnhsc3Vqanp5a2dhZXZsLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI5NzVjMjViZi03MzIzLTQyNzUtOWVkYy1kNzI2ZmZkOWQ2MjIiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc1ODk3Nzc1LCJpYXQiOjE3NzU4OTQxNzUsImVtYWlsIjoicGx1c3BsYW5AeW9wbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsIjoicGx1c3BsYW5AeW9wbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNfc2V0X3Bhc3N3b3JkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6Ijk3NWMyNWJmLTczMjMtNDI3NS05ZWRjLWQ3MjZmZmQ5ZDYyMiJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc1ODk0MTc1fV0sInNlc3Npb25faWQiOiJmOWZmMjhiNC01Y2E2LTQ0NmYtOWI3Yi03MTdmNzNmOGE4MDEiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.tgI2fuEpUgjoK6x79W89yEMoggwQMiKWmHBIBibQvmc",
+      "domain": "wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "refresh_token",
+      "value": "gwbi24slgpvo",
+      "domain": "wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "user_id",
+      "value": "975c25bf-7323-4275-9edc-d726ffd9d622",
+      "domain": "wyask-fe-staging-new.vercel.app",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Strict"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://wyask-fe-staging-new.vercel.app",
+      "localStorage": [
+        {
+          "name": "AMP_remote_config_491f213ae2",
+          "value": "{\"remoteConfig\":{\"configs\":{\"diagnostics\":{\"browserSDK\":{\"sampleRate\":0.02}},\"sessionReplay\":{\"sr_sampling_config\":{\"capture_enabled\":true,\"sample_rate\":1}},\"analyticsSDK\":{}}},\"lastFetch\":\"2026-04-11T07:56:11.552Z\"}"
+        },
+        {
+          "name": "AMP_unsent_491f213ae2",
+          "value": "[]"
+        },
+        {
+          "name": "amplitude.engagement.ENGAGEMENT_491f213ae2_DEFAULT_USER_PROVIDER",
+          "value": "{\"first_seen\":\"1775894172.96\"}"
+        },
+        {
+          "name": "amplitude.engagement.eus.491f21.device_id:a81b8312-ae1f-4df6-917c-431319b39d35",
+          "value": "{\"nudgeInteractions\":{}}"
+        },
+        {
+          "name": "snowplowOutQueue_sp",
+          "value": "[{\"payload\":{\"e\":\"pv\",\"url\":\"https://wyask-fe-staging-new.vercel.app/login\",\"page\":\"Sign in | WyAsk\",\"eid\":\"d0731d0f-88a4-4ce7-adf6-57c237af83ae\",\"tv\":\"js-4.6.8\",\"tna\":\"sp\",\"aid\":\"wyask-fe\",\"p\":\"web\",\"cookie\":\"1\",\"cs\":\"UTF-8\",\"lang\":\"en-US\",\"res\":\"1280x720\",\"cd\":24,\"tz\":\"Asia/Saigon\",\"dtm\":\"1775894171526\",\"co\":\"{\\\"schema\\\":\\\"iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0\\\",\\\"data\\\":[{\\\"schema\\\":\\\"iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0\\\",\\\"data\\\":{\\\"id\\\":\\\"aceb11d2-284a-44c5-97f5-49ccd48db69a\\\"}},{\\\"schema\\\":\\\"iglu:com.snowplowanalytics.snowplow/client_session/jsonschema/1-0-2\\\",\\\"data\\\":{\\\"userId\\\":\\\"4b513ae7-9786-4cd8-924a-658a775ac934\\\",\\\"sessionId\\\":\\\"f6f29d2f-cf50-4272-baff-b712882c953b\\\",\\\"eventIndex\\\":1,\\\"sessionIndex\\\":1,\\\"previousSessionId\\\":null,\\\"storageMechanism\\\":\\\"COOKIE_1\\\",\\\"firstEventId\\\":\\\"d0731d0f-88a4-4ce7-adf6-57c237af83ae\\\",\\\"firstEventTimestamp\\\":\\\"2026-04-11T07:56:11.526Z\\\"}}]}\",\"vp\":\"1280x720\",\"ds\":\"1280x808\",\"vid\":1,\"sid\":\"f6f29d2f-cf50-4272-baff-b712882c953b\",\"duid\":\"4b513ae7-9786-4cd8-924a-658a775ac934\"},\"svrAnon\":false},{\"payload\":{\"e\":\"se\",\"se_ca\":\"Analytics\",\"se_ac\":\"view_footer\",\"eid\":\"0730a312-b478-42e3-82db-e87233968652\",\"tv\":\"js-4.6.8\",\"tna\":\"sp\",\"aid\":\"wyask-fe\",\"p\":\"web\",\"cookie\":\"1\",\"cs\":\"UTF-8\",\"lang\":\"en-US\",\"res\":\"1280x720\",\"cd\":24,\"tz\":\"Asia/Saigon\",\"dtm\":\"1775894171527\",\"vp\":\"1280x720\",\"ds\":\"1280x808\",\"vid\":1,\"sid\":\"f6f29d2f-cf50-4272-baff-b712882c953b\",\"duid\":\"4b513ae7-9786-4cd8-924a-658a775ac934\",\"url\":\"https://wyask-fe-staging-new.vercel.app/login\",\"co\":\"{\\\"schema\\\":\\\"iglu:com.snowplowanalytics.snowplow/contexts/jsonschema/1-0-0\\\",\\\"data\\\":[{\\\"schema\\\":\\\"iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0\\\",\\\"data\\\":{\\\"id\\\":\\\"aceb11d2-284a-44c5-97f5-49ccd48db69a\\\"}},{\\\"schema\\\":\\\"iglu:com.snowplowanalytics.snowplow/client_session/jsonschema/1-0-2\\\",\\\"data\\\":{\\\"userId\\\":\\\"4b513ae7-9786-4cd8-924a-658a775ac934\\\",\\\"sessionId\\\":\\\"f6f29d2f-cf50-4272-baff-b712882c953b\\\",\\\"eventIndex\\\":2,\\\"sessionIndex\\\":1,\\\"previousSessionId\\\":null,\\\"storageMechanism\\\":\\\"COOKIE_1\\\",\\\"firstEventId\\\":\\\"d0731d0f-88a4-4ce7-adf6-57c237af83ae\\\",\\\"firstEventTimestamp\\\":\\\"2026-04-11T07:56:11.526Z\\\"}}]}\"},\"svrAnon\":false}]"
+        },
+        {
+          "name": "EXP_unsent_$default_instance",
+          "value": "[]"
+        }
+      ]
+    }
+  ]
+}
