@@ -1,109 +1,127 @@
-import { Page, Locator } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
+import { createTempUploadFile } from "../fixtures/uploadTestFile";
 
 export class EnvelopesPage {
-  private readonly newEnvelopeButton: Locator;
-  private readonly nameField: Locator;
-  private readonly uploadFileButton: Locator;
-  private readonly languageButton: Locator;
-  private readonly toneButton: Locator;
-  private readonly continueButton: Locator;
-  private readonly fileInput: Locator;
+  readonly newEnvelopeButton: Locator;
+  readonly nameField: Locator;
+  readonly knowledgeFileInput: Locator;
+  readonly languageButton: Locator;
+  readonly toneButton: Locator;
+  readonly continueButton: Locator;
+  readonly brandYourEnvelopeHeading: Locator;
+  readonly brandSkipLink: Locator;
+  readonly notificationsRegion: Locator;
+  readonly notificationMessages: Locator;
+  readonly unsavedChangesLeaveButton: Locator;
 
   constructor(public readonly page: Page) {
-    this.newEnvelopeButton = page.getByRole('button', { name: /plus|New envelope/i });
-    this.nameField = page.getByRole('textbox', { name: /Name/i });
-    this.uploadFileButton = page.getByRole('button', { name: /Upload file/i });
-    this.languageButton = page.getByRole('button', { name: /Language/i });
-    this.toneButton = page.getByRole('button', { name: /Tone/i });
-    this.continueButton = page.getByRole('button', { name: /Continue/i });
-    this.fileInput = page.locator('input[type="file"]');
+    this.newEnvelopeButton = page.getByRole("button", {
+      name: /plus|New envelope/i,
+    });
+    this.nameField = page.getByRole("textbox", { name: /Name/i });
+    this.knowledgeFileInput = page.locator('input[type="file"]').first();
+    this.languageButton = page.getByRole("button", { name: /Language/i });
+    this.toneButton = page.getByRole("button", { name: /Tone/i });
+    this.continueButton = page.getByRole("button", { name: /Continue/i });
+    this.brandYourEnvelopeHeading = page.getByRole("heading", {
+      name: /Brand your envelope/i,
+    });
+    this.brandSkipLink = page.getByRole("link", { name: /^Skip$/i });
+    this.notificationsRegion = page.getByRole("region", {
+      name: /Notifications/i,
+    });
+    this.notificationMessages = this.notificationsRegion.getByRole("listitem");
+    this.unsavedChangesLeaveButton = page.getByRole("button", { name: /^Leave$/i });
   }
 
-  async clickNewEnvelopeButton() {
+  async dismissUnsavedChangesIfPresent(timeoutMs: number = 10000) {
+    const shown = await this.unsavedChangesLeaveButton
+      .waitFor({ state: "visible", timeout: timeoutMs })
+      .then(() => true)
+      .catch(() => false);
+    if (shown) {
+      await this.unsavedChangesLeaveButton.click();
+    }
+  }
+
+  async goto() {
+    await this.page.goto("/workspace/envelopes");
+    await this.page.waitForLoadState("domcontentloaded", { timeout: 15000 }).catch(
+      () => {
+        // Best-effort wait only (some environments keep long polling open).
+      },
+    );
+    if (this.page.url().includes("/login")) {
+      throw new Error(`User session lost: redirected to login (${this.page.url()})`);
+    }
+  }
+
+  async openNewEnvelopeForm() {
+    await this.newEnvelopeButton.waitFor({ state: "visible", timeout: 10000 });
+    await expect(this.newEnvelopeButton).toBeEnabled({ timeout: 30000 });
     await this.newEnvelopeButton.click();
+    await this.nameField.waitFor({ state: "visible", timeout: 10000 });
   }
 
   async leaveNameFieldBlank() {
-    // Just ensure the field is empty - no action needed
-    await this.nameField.fill('');
+    await this.nameField.fill("");
   }
 
-  async uploadMockFile(fieldType: 'knowledge' | 'name' = 'knowledge') {
-    const fs = require('fs');
-    const path = require('path');
-    
-    // Create a temporary PNG test file
-    const tempDir = '/tmp';
-    const filePath = path.join(tempDir, `test-file-${Date.now()}.png`);
-    
-    // Create a minimal valid PNG file (1x1 pixel, white background)
-    const pngBuffer = Buffer.from([
-      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D,
-      0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-      0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53, 0xDE, 0x00, 0x00, 0x00,
-      0x0C, 0x49, 0x44, 0x41, 0x54, 0x08, 0x99, 0x63, 0xF8, 0xCF, 0xC0, 0x00,
-      0x00, 0x00, 0x03, 0x00, 0x01, 0x4B, 0xE5, 0x27, 0xDE, 0x00, 0x00, 0x00,
-      0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
-    ]);
-    
-    fs.writeFileSync(filePath, pngBuffer);
-    console.log(`Created PNG test file at: ${filePath}`);
+  async enterName(name: string) {
+    await this.nameField.fill(name);
+  }
 
-    // Find all file inputs on the page
-    const fileInputs = await this.page.locator('input[type="file"]').all();
-    console.log(`Found ${fileInputs.length} file inputs`);
-    
-    if (fileInputs.length > 0) {
-      try {
-        // For knowledge field (first file input), use the first one
-        // For name field (second file input), use appropriate index
-        const fileInputIndex = fieldType === 'knowledge' ? 0 : 1;
-        
-        if (fileInputs[fileInputIndex]) {
-          await fileInputs[fileInputIndex].setInputFiles(filePath);
-          console.log(`File uploaded successfully to ${fieldType} field`);
-        } else {
-          console.log(`File input at index ${fileInputIndex} not found`);
-          throw new Error(`File input for ${fieldType} field not found`);
-        }
-      } catch (e) {
-        console.log(`Error uploading file: ${e}`);
-        throw e;
-      }
-    } else {
-      console.log(`No file input found`);
-      throw new Error('File input not found on the page');
+  async uploadKnowledgeFile(mockFileName: string) {
+    const filePath = await createTempUploadFile(mockFileName);
+    await this.knowledgeFileInput.waitFor({ state: "attached", timeout: 10000 });
+    await this.knowledgeFileInput.setInputFiles(filePath);
+  }
+
+  async clickContinue() {
+    await this.continueButton.click();
+    // Some flows show an app-level "Unsaved Changes" confirm when navigating.
+    await this.dismissUnsavedChangesIfPresent(10000);
+  }
+
+  async submitWithEnterKey() {
+    // Using Enter key simulates form submission without depending on button text.
+    await this.continueButton.focus();
+    await this.page.keyboard.press("Enter");
+
+    const notificationShown = await this.notificationMessages
+      .first()
+      .waitFor({ state: "visible", timeout: 2000 })
+      .then(() => true)
+      .catch(() => false);
+    if (!notificationShown) {
+      await this.clickContinue();
     }
+
+    // Some flows show an app-level "Unsaved Changes" confirm when navigating.
+    await this.dismissUnsavedChangesIfPresent(5000);
   }
 
   async selectRandomLanguage() {
-    // Click the language button using force click
-    await this.languageButton.click({ force: true, timeout: 5000 });    
-    // Get all language options and pick a random one
-    const languageOptions = await this.page.locator('[role="option"]').all();
-    if (languageOptions.length > 0) {
-      const randomIndex = Math.floor(Math.random() * languageOptions.length);
-      const selectedOption = languageOptions[randomIndex];
-      console.log(`Selecting language option at index ${randomIndex}`);
-      await selectedOption.click({ force: true });
-    }
+    await this.languageButton.click({ timeout: 5000, force: true });
+    const wrapper = this.languageButton.locator("..");
+    const buttons = wrapper.locator("button");
+    await buttons.nth(1).waitFor({ state: "visible", timeout: 5000 });
+    const buttonCount = await buttons.count();
+    if (buttonCount < 2) throw new Error("No language options found");
+    const optionIndex = 1 + Math.floor(Math.random() * (buttonCount - 1));
+    await buttons.nth(optionIndex).click({ force: true });
   }
 
   async selectRandomTone() {
-    // Scroll to ensure tone button is visible and not covered
     await this.toneButton.scrollIntoViewIfNeeded();
-    
-    // Click the tone button using force click
-    await this.toneButton.click({ force: true, timeout: 5000 });
-
-    // Get all tone options and pick a random one
-    const toneOptions = await this.page.locator('[role="option"]').all();
-    if (toneOptions.length > 0) {
-      const randomIndex = Math.floor(Math.random() * toneOptions.length);
-      const selectedOption = toneOptions[randomIndex];
-      console.log(`Selecting tone option at index ${randomIndex}`);
-      await selectedOption.click({ force: true });
-    }
+    await this.toneButton.click({ timeout: 5000, force: true });
+    const wrapper = this.toneButton.locator("..");
+    const buttons = wrapper.locator("button");
+    await buttons.nth(1).waitFor({ state: "visible", timeout: 5000 });
+    const buttonCount = await buttons.count();
+    if (buttonCount < 2) throw new Error("No tone options found");
+    const optionIndex = 1 + Math.floor(Math.random() * (buttonCount - 1));
+    await buttons.nth(optionIndex).click({ force: true });
   }
 
   async isContinueButtonDisabled(): Promise<boolean> {
@@ -111,21 +129,6 @@ export class EnvelopesPage {
   }
 
   async isContinueButtonEnabled(): Promise<boolean> {
-    // Wait for any dialog/modal to be open
-    const dialog = this.page.locator('[role="dialog"]').first();
-    await dialog.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {
-      // Dialog might not exist, continue anyway
-    });
-        
-    // Check if button exists and is enabled
-    return !(await this.continueButton.isDisabled());
-  }
-
-  async enterNameInField(name: string) {
-    await this.nameField.fill(name);
-  }
-
-  async clickContinueButton() {
-    await this.continueButton.click();
+    return await this.continueButton.isEnabled();
   }
 }
