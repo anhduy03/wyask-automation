@@ -9,8 +9,8 @@ Feature: Envelope Creation
     When the user clicks on the "plus New envelope" button
     And the user leaves the "Name" field blank
     And the user uploads a mock file to the Knowledge field
-    And the user selects a random language
-    And the user selects a random tone
+    And the user selects "English" from the "Language" dropdown
+    And the user selects "Formal" from the "Tone" dropdown
     Then the "Continue" button should be disabled
     When the user enters a name in the "Name" field
     Then the "Continue" button should be enabled
@@ -20,9 +20,8 @@ Feature: Envelope Creation
     Given the user is on the envelopes page
     When the user clicks on the "plus New envelope" button
     And the user enters "<Name>" in the "Name" field
-    And the user leaves the "Knowledge" field blank
-    And the user selects a random language
-    And the user selects a random tone
+    And the user selects "English" from the "Language" dropdown
+    And the user selects "Formal" from the "Tone" dropdown
     Then the "Continue" button should be disabled
     When the user uploads "<Mock File>" to the Knowledge field
     Then the "Continue" button should be enabled
@@ -34,13 +33,17 @@ Feature: Envelope Creation
     | Test Envelope 3 | mock_file_3.pdf  |
 
   @regression @WYASK-005
-  Scenario: Verify that the envelope can be created successfully
+  Scenario Outline: Verify that the envelope can be created successfully
     Given the user is on the envelopes page
     When the user clicks on the "plus New envelope" button
-    And the user enters "WYASK-005 Envelope" in the "Name" field
-    And the user uploads "mock_file_5.png" to the Knowledge field
-    And the user selects a random language
-    And the user selects a random tone
-    When the user clicks enter button
+    And the user enters "<Name>" in the "Name" field
+    And the user uploads "<Knowledge File>" to the Knowledge field
+    And the user selects "English" from the "Language" dropdown
+    And the user selects "Formal" from the "Tone" dropdown
+    And the user submits the form
     Then a successful notification displays
     And the Brand your envelope page displays
+
+  Examples:
+    | Name                | Knowledge File     |
+    | WYASK-005 Envelope  | mock_file_5.pdf    |

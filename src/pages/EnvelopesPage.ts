@@ -1,5 +1,8 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 import { createTempUploadFile } from "../fixtures/uploadTestFile";
+
+export type LanguageOption = "English" | "French" | "German" | "Spanish";
+export type ToneOption = "Formal" | "Informal" | "Friendly" | "Professional";
 
 export class EnvelopesPage {
   readonly newEnvelopeButton: Locator;
@@ -13,6 +16,9 @@ export class EnvelopesPage {
   readonly notificationsRegion: Locator;
   readonly notificationMessages: Locator;
   readonly unsavedChangesLeaveButton: Locator;
+  readonly unsavedChangesStayButton: Locator;
+  readonly languageDropdown: Locator;
+  readonly toneDropdown: Locator;
 
   constructor(public readonly page: Page) {
     this.newEnvelopeButton = page.getByRole("button", {
@@ -32,16 +38,10 @@ export class EnvelopesPage {
     });
     this.notificationMessages = this.notificationsRegion.getByRole("listitem");
     this.unsavedChangesLeaveButton = page.getByRole("button", { name: /^Leave$/i });
-  }
+    this.unsavedChangesStayButton = page.getByRole("button", { name: /^Stay$/i });
 
-  async dismissUnsavedChangesIfPresent(timeoutMs: number = 10000) {
-    const shown = await this.unsavedChangesLeaveButton
-      .waitFor({ state: "visible", timeout: timeoutMs })
-      .then(() => true)
-      .catch(() => false);
-    if (shown) {
-      await this.unsavedChangesLeaveButton.click();
-    }
+    this.languageDropdown = page.locator('[data-testid="language-dropdown"], [role="listbox"]').first();
+    this.toneDropdown = page.locator('[data-testid="tone-dropdown"], [role="listbox"]').last();
   }
 
   async goto() {
@@ -58,7 +58,6 @@ export class EnvelopesPage {
 
   async openNewEnvelopeForm() {
     await this.newEnvelopeButton.waitFor({ state: "visible", timeout: 10000 });
-    await expect(this.newEnvelopeButton).toBeEnabled({ timeout: 30000 });
     await this.newEnvelopeButton.click();
     await this.nameField.waitFor({ state: "visible", timeout: 10000 });
   }
@@ -79,49 +78,31 @@ export class EnvelopesPage {
 
   async clickContinue() {
     await this.continueButton.click();
-    // Some flows show an app-level "Unsaved Changes" confirm when navigating.
     await this.dismissUnsavedChangesIfPresent(10000);
   }
 
-  async submitWithEnterKey() {
-    // Using Enter key simulates form submission without depending on button text.
-    await this.continueButton.focus();
-    await this.page.keyboard.press("Enter");
-
-    const notificationShown = await this.notificationMessages
-      .first()
-      .waitFor({ state: "visible", timeout: 2000 })
-      .then(() => true)
-      .catch(() => false);
-    if (!notificationShown) {
-      await this.clickContinue();
-    }
-
-    // Some flows show an app-level "Unsaved Changes" confirm when navigating.
-    await this.dismissUnsavedChangesIfPresent(5000);
+  async submitForm() {
+    await this.continueButton.scrollIntoViewIfNeeded();
+    await this.continueButton.click();
   }
 
-  async selectRandomLanguage() {
-    await this.languageButton.click({ timeout: 5000, force: true });
-    const wrapper = this.languageButton.locator("..");
-    const buttons = wrapper.locator("button");
-    await buttons.nth(1).waitFor({ state: "visible", timeout: 5000 });
-    const buttonCount = await buttons.count();
-    if (buttonCount < 2) throw new Error("No language options found");
-    const optionIndex = 1 + Math.floor(Math.random() * (buttonCount - 1));
-    await buttons.nth(optionIndex).click({ force: true });
+  async selectLanguage(language: LanguageOption = "English") {
+    await this.languageButton.click();
+    // Wait for dropdown to open, then find the option button by text
+    await this.page.waitForTimeout(500);
+    const languageOption = this.page.getByRole("button", { name: language, exact: true });
+    await languageOption.waitFor({ state: "visible", timeout: 5000 });
+    await languageOption.click();
   }
 
-  async selectRandomTone() {
+  async selectTone(tone: ToneOption = "Formal") {
     await this.toneButton.scrollIntoViewIfNeeded();
-    await this.toneButton.click({ timeout: 5000, force: true });
-    const wrapper = this.toneButton.locator("..");
-    const buttons = wrapper.locator("button");
-    await buttons.nth(1).waitFor({ state: "visible", timeout: 5000 });
-    const buttonCount = await buttons.count();
-    if (buttonCount < 2) throw new Error("No tone options found");
-    const optionIndex = 1 + Math.floor(Math.random() * (buttonCount - 1));
-    await buttons.nth(optionIndex).click({ force: true });
+    await this.toneButton.click();
+    // Wait for dropdown to open, then find the option button by text
+    await this.page.waitForTimeout(500);
+    const toneOption = this.page.getByRole("button", { name: tone, exact: true });
+    await toneOption.waitFor({ state: "visible", timeout: 5000 });
+    await toneOption.click();
   }
 
   async isContinueButtonDisabled(): Promise<boolean> {

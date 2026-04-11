@@ -12,5 +12,6 @@ node_modules/
 /test-results/
 /allure-results/
 /.bdd-gen/
+/.qwen/
 .eslintrc.json
 .env

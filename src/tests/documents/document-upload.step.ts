@@ -5,27 +5,31 @@ import { expect } from "@playwright/test";
 const { Given, When, Then } = createBdd(test);
 
 When("the user clicks on {string} link", async ({ homePage }, linkName) => {
-  if (linkName === "Upload your first document") {
-    await homePage.clickUploadFirstDocument();
-  }
+  throw new Error(`Unsupported link: "${linkName}". Please add a specific step definition for this link.`);
+});
+
+When("the user clicks on the Upload your first document link", async ({ homePage }) => {
+  await homePage.clickUploadFirstDocument();
 });
 
 When(
   "the user clicks on {string} button",
   async ({ documentUploadPage }, buttonName) => {
-    if (buttonName === "Upload file") {
-      await documentUploadPage.clickUploadFile();
-    }
+    throw new Error(`Unsupported button: "${buttonName}". Please add a specific step definition for this button.`);
   },
 );
+
+When("the user clicks on the Upload file button", async ({ documentUploadPage }) => {
+  await documentUploadPage.clickUploadFile();
+});
 
 Then(
   "the user should see the {string} heading",
   async ({ documentUploadPage }, headingName) => {
-    if (headingName === "New knowledge envelope") {
-      await expect(
-        documentUploadPage.newKnowledgeEnvelopeHeading,
-      ).toBeVisible();
-    }
+    throw new Error(`Unsupported heading: "${headingName}". Please add a specific step definition for this heading.`);
   },
 );
+
+Then("the user should see the New knowledge envelope heading", async ({ documentUploadPage }) => {
+  await expect(documentUploadPage.newKnowledgeEnvelopeHeading).toBeVisible();
+});
