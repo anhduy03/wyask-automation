@@ -1,9 +1,0 @@
-Successfully on envelopes page: https://wyask-fe-staging-new.vercel.app/workspace/envelopes
-Created PNG test file at: /tmp/test-file-1775878770419.png
-Found 1 file inputs
-File uploaded successfully to knowledge field
-Before name entry - Continue button is disabled: true
-Entered name: Test Envelope 1775878770575
-Button still disabled: false
-Has disabled attribute: false
-Has name value: true (Test Envelope 1775878770575)
