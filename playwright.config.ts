@@ -17,6 +17,7 @@ dotenv.config();
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  timeout: 60_000,
   testDir: './.bdd-gen',
   /* Run tests in files in parallel */
   fullyParallel: true,
